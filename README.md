@@ -1,6 +1,6 @@
 [![CircleCI](https://circleci.com/gh/denisshevchenko/ohaskell.guide.svg?style=shield&circle-token=42b4b253957b4896ad05759fce3a7ae576ac8a72)](https://circleci.com/gh/denisshevchenko/ohaskell.guide)&nbsp;&nbsp;&nbsp;[![Code Climate](https://codeclimate.com/github/denisshevchenko/ohaskell.guide/badges/gpa.svg)](https://codeclimate.com/github/denisshevchenko/ohaskell.guide)&nbsp;&nbsp;&nbsp;[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/denisshevchenko/ohaskell-book)
 
-# О Haskell по-человечески
+# О Haskell по-человечески версия 2.1. от 2023 года
 
 Ваша первая книга об удивительном и прекрасном языке программирования [Haskell](https://www.haskell.org/).
 
