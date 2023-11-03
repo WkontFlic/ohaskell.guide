@@ -7,15 +7,16 @@
 Часто мы хотим выбирать не только из двух возможных вариантов. Вот как это можно сделать:
 
 ```haskell
+{-# LANGUAGE UnicodeSyntax #-}  -- разрешение использовать не латинские имена переменных и функций (Unicod)
 analyzeGold :: Int -> String
 analyzeGold standard =
   if standard == 999
-    then "Wow! 999 standard!"
+    then "Отлично! 999 проба!"
     else if standard == 750
-           then "Great! 750 standard."
+           then "Хорошо! 750 проба."
            else if standard == 585
-                  then "Not bad! 585 standard."
-                  else "I don't know such a standard..."
+                  then "Не плохо! 585 проба."
+                  else "Я не знаю такой пробы ..."
 
 main :: IO ()
 main = putStrLn (analyzeGold 999)
@@ -24,6 +25,8 @@ main = putStrLn (analyzeGold 999)
 Уверен, вы уже стираете плевок с экрана. Вложенная `if-then-else` конструкция не может понравиться никому, ведь она крайне неудобна в обращении. А уж если бы анализируемых проб золота было штук пять или семь, эта лестница стала бы поистине ужасной. К счастью, в Haskell можно написать по-другому:
 
 ```haskell
+-- разрешение использовать не латинские имена переменных и функций (Unicod)
+{-# LANGUAGE UnicodeSyntax #-}
 analyzeGold :: Int -> String
 analyzeGold standard =
   if | standard == 999 -> "Wow! 999 standard!"
@@ -47,6 +50,8 @@ if | COND1 -> EXPR1
 Не пренебрегайте `otherwise`! Если вы его не укажете и при этом примените функцию `analyzeGold` к значению, отличному от проверяемых:
 
 ```haskell
+-- разрешение использовать не латинские имена переменных и функций (Unicod)
+{-# LANGUAGE UnicodeSyntax #-}
 analyzeGold :: Int -> String
 analyzeGold standard =
   if | standard == 999 -> "Wow! 999 standard!"
@@ -70,6 +75,7 @@ Non-exhaustive guards in multi-way if
 А сейчас стоп. Вы ведь попробовали скомпилировать этот код, не так ли? А почему вы не ругаетесь? Ведь такой код не скомпилируется, так как не хватает одной маленькой, но важной детали. Вот как должен выглядеть модуль `Main`:
 
 ```haskell
+{-# LANGUAGE UnicodeSyntax #-}  -- разрешение использовать не латинские имена переменных и функций (Unicod)
 {-# LANGUAGE MultiWayIf #-}  -- Что это??
 
 module Main where
@@ -96,12 +102,14 @@ main = putStrLn (analyzeGold 999)
 Множественный `if` весьма удобен, но есть способ более красивый. Взгляните:
 
 ```haskell
+{-# LANGUAGE UnicodeSyntax #-}  -- разрешение использовать не латинские имена переменных и функций (Unicod)
+{-# LANGUAGE MultiWayIf #-}  -- включение расширения `MultiWayIf` - для использования конструкции множестенный-if
 analyzeGold :: Int -> String
 analyzeGold standard
-  | standard == 999 = "Wow! 999 standard!"
-  | standard == 750 = "Great! 750 standard."
-  | standard == 585 = "Not bad! 585 standard."
-  | otherwise = "I don't know such a standard..."
+  | standard == 999 = "Отлично! 999 проба!"
+  | standard == 750 = "Хорошо! 750 проба."
+  | standard == 585 = "Не плохо! 585 проба."
+  | otherwise = "Я не знаю такую пробу ..."
 ```
 
 Ключевое слово `if` исчезло. Схема здесь такая:
