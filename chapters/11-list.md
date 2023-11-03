@@ -152,7 +152,9 @@ handleTableRow row
 
 Это чуток видоизменённый кусочек одной моей программы, функция `handleTableRow` обрабатывает строку таблицы. Стандартная функция `length` даёт нам длину списка (число элементов в нём). В данном случае мы узнаём число элементов в строке таблицы `row`, и в зависимости от этой длины применяем к этой строке функцию `composeTwoOptionsFrom` или `composeThreeOptionsFrom`.
 
-## Слегка изменённый пример кода для тестирвоания 
+## Слегка изменённый пример кода для самостоятельного тестирования 
+
+Чтобы не присать реализацию функций composeTwoOptionsFrom, composeThreeOptionsFrom, invalidRow - превратим их название в строку - т.о. программа вместо выполнения функции будет просто выводить её название.
 
 ```haskell
 {-# LANGUAGE UnicodeSyntax #-} -- разрешение использовать не латинские имена переменных и функций (Unicod)
@@ -161,7 +163,7 @@ module Main where
 -- Стандартный модуль для работы со списками.
 import Data.List
 -- функция handleTableRow
-handleTableRow :: [String] -> String
+handleTableRow :: [String] -> String -- принмает список строк, возвращает строку в зависимости от длинны списка 
 handleTableRow row
   | length row == 2 = "composeTwoOptionsFrom row"
   | length row == 3 = "composeThreeOptionsFrom row"
@@ -172,10 +174,28 @@ main :: IO ()
 -- main = print (tail ["Mom", "Popo", "Bro"]) -- возвращает хвост списка
 -- main = putStrLn $ show (tail ["Mom", "Popo", "Bro"]) -- возвращает хвост списка
 -- main = print (length ["Мама", "Папа", "Брат"]) -- возвращает длинну списка
-main = print (handleTableRow ["Mom", "Papa", "Bro"]) -- хвост списка
+main = print (handleTableRow ["Mom", "Papa", "Bro"]) -- результат работы функции handleTableRow со списком ["Mom", "Papa", "Bro"]
+```
+или по русски
+
+```haskell
+{-# LANGUAGE UnicodeSyntax #-} -- разрешение использовать не латинские имена переменных и функций (Unicod)
+{-# LANGUAGE MultiWayIf #-}  -- включение расширения которое позволяет использовать множественный if
+module Main where
+import Data.List  -- подключаем стандартный модуль для работы со списками
+-- функция обработкаСтроки
+обработкаСтроки :: [String] -> String
+обработкаСтроки строка
+  | length строка == 2 = "2 - composeTwoOptionsFrom row"
+  | length строка == 3 = "3 - три - composeThreeOptionsFrom row"
+  | otherwise       = "ERROR - Ошибка - invalidRow row"
+-- Начало программы  
+main :: IO ()
+main = print (обработкаСтроки ["Mom", "Papa", "Bro"]) -- результат handleTableRow
+-- main = putStrLn $ show (обработкаСтроки ["Mom", "Papa", "Bro"]) -- результат handleTableRow
 ```
 
-Но постойте, а где же тут список? Функция `handleTableRow` применяется к строке и вычисляет строку. А всё дело в том, что строка - это список символов. То есть тип `String` эквивалентен типу `[Char]`. Скажу более: `String` &mdash; это даже не самостоятельный тип, это всего лишь псевдоним для типа `[Char]`, и вот как он задан:
+Но постойте, а где же тут список? Функция `handleTableRow` применяется к строке и вычисляет строку. Дело в том, что строка - это список символов. То есть тип `String` эквивалентен типу `[Char]`. Скажу более: `String` &mdash; это даже не самостоятельный тип, это всего лишь псевдоним для типа `[Char]`, и вот как он задан:
 
 ```haskell
 type String = [Char]
@@ -194,6 +214,7 @@ type  String  =      [Char]
 ```haskell
 handleTableRow :: [Char] -> [Char]
 ```
+## Использование промежуточных выражений при работе со списками
 
 При работе со списками мы можем использовать уже знакомые промежуточные выражения, например:
 
@@ -204,6 +225,25 @@ handleTableRow row
   | size == 3 = composeThreeOptionsFrom row
   | otherwise = invalidRow row
   where size = length row
+```
+Код для самостоятельного тестирования:
+
+```haskell
+{-# LANGUAGE UnicodeSyntax #-} -- разрешение использовать не латинские имена переменных и функций (Unicod)
+{-# LANGUAGE MultiWayIf #-}  -- включение расширения которое позволяет использовать множественный if
+module Main where
+import Data.List  -- подключаем стандартный модуль для работы со списками
+-- функция обработкаСтроки
+обработкаСтроки :: [String] -> String
+обработкаСтроки строка
+  | длиннаСписка == 2 = "2 - composeTwoOptionsFrom row"
+  | длиннаСписка == 3 = "3 - три - composeThreeOptionsFrom row"
+  | otherwise       = "ERROR - Ошибка - invalidRow row"
+  where длиннаСписка = length строка  -- выделяем вычисление длинны списка в отдельное выражение 
+-- Начало программы  
+main :: IO ()
+main = print (обработкаСтроки ["Mom", "Papa", "Bro"]) -- результат handleTableRow
+-- main = putStrLn $ show (обработкаСтроки ["Mom", "Papa", "Bro"]) -- результат handleTableRow
 ```
 
 А можно и так:
@@ -221,6 +261,30 @@ handleTableRow row
 ```
 
 Здесь выражения `twoOptions` и `threeOptions` имеют уже знакомый нам стандартный тип `Bool`, ведь они равны результату сравнения значения `size` с числом.
+
+Код для самостоятельного тестирования:
+
+```haskell
+{-# LANGUAGE UnicodeSyntax #-} -- разрешение использовать не латинские имена переменных и функций (Unicod)
+{-# LANGUAGE MultiWayIf #-}  -- включение расширения которое позволяет использовать множественный if
+module Main where
+import Data.List  -- подключаем стандартный модуль для работы со списками
+-- функция обработкаСтроки
+обработкаСтроки :: [String] -> String
+обработкаСтроки строка
+  | twoOptions = "2 - composeTwoOptionsFrom row"
+  | threeOptions == 3 = "3 - три - composeThreeOptionsFrom row"
+  | otherwise       = "ERROR - Ошибка - invalidRow row"
+  where
+    длиннаСписка = length строка  -- выделяем вычисление длинны списка в отдельное выражение
+    twoOptions   = длиннаСписка == 2   -- вместо twoOptions -> подставляется длиннаСписка == 2 -> length строка == 2
+    threeOptions = длиннаСписка == 3   -- вместо threeOptions -> подставляется длиннаСписка == 3 -> length строка == 3
+-- Начало программы  
+main :: IO ()
+main = print (обработкаСтроки ["Mom", "Papa", "Bro"]) -- результат handleTableRow
+-- main = putStrLn $ show (обработкаСтроки ["Mom", "Papa", "Bro"]) -- результат handleTableRow
+```
+
 
 ## Неизменность списка
 
