@@ -166,7 +166,7 @@ putStrLn ((\x -> x ++ " val1") "Привет")
 Привет val1
 ```
 
-Кстати, а каков тип списка `functions`? Его тип таков: `[String -> String]`. То есть список функций с одним аргументом типа `String`, возвращающих значение типа `String`.
+Кстати, а какой тип списка `functions`? Его тип таков: `[String -> String]`. То есть список функций с одним аргументом типа `String`, возвращающих значение типа `String`.
 
 ## Локальные функции
 
@@ -179,10 +179,10 @@ import Data.List
 -- функиця проверкаАдресаЭлПочты
 проверкаАдресаЭлПочты :: String -> Bool
 проверкаАдресаЭлПочты элПочта =
-    containsAtSign элПочта && endsWithCom элПочта
+    содержитАТсимвол элПочта && оканчиваетсяНаCom элПочта
   where
-    containsAtSign e = "@" `isInfixOf` e
-    endsWithCom e = ".com" `isSuffixOf` e
+    содержитАТсимвол e = "@" `isInfixOf` e
+    оканчиваетсяНаCom e = ".com" `isSuffixOf` e
 
 main :: IO ()
 main = putStrLn (if проверкаАдресаЭлПочты мояПочта
@@ -195,8 +195,8 @@ main = putStrLn (if проверкаАдресаЭлПочты мояПочта
 Несколько наивная функция `проверкаАдресаЭлПочты` проверяет `.com`-адрес. Её выражение образовано оператором `&&` и двумя выражениями типа `Bool`. Вот как образованы эти выражения:
 
 ```haskell
-containsAtSign e = "@" `isInfixOf` e
-endsWithCom e = ".com" `isSuffixOf` e
+содержитАТсимвол e = "@" `isInfixOf` e
+оканчиваетсяНаCom e = ".com" `isSuffixOf` e
 ```
 
 Это &mdash; две функции, которые мы определили прямо в `where`-секции, поэтому они существуют только для основного выражения функции `validComEmail`. С простыми функциями так поступают очень часто: где она нужна, там её и определяют. Мы могли бы написать и более явно:
@@ -204,15 +204,15 @@ endsWithCom e = ".com" `isSuffixOf` e
 ```haskell
 проверкаАдресаЭлПочты :: String -> Bool
 проверкаАдресаЭлПочты элПочта =
-    containsAtSign элПочта && endsWithCom элПочта
+    содержитАТсимвол элПочта && оканчиваетсяНаCom элПочта
   where
     -- Объявляем локальную функцию явно.
-    containsAtSign :: String -> Bool
-    containsAtSign e = "@" `isInfixOf` e
+    содержитАТсимвол :: String -> Bool
+    содержитАТсимвол e = "@" `isInfixOf` e
 
     -- И эту тоже.
-    endsWithCom :: String -> Bool
-    endsWithCom e = ".com" `isSuffixOf` e
+    оканчиваетсяНаCom :: String -> Bool
+    оканчиваетсяНаCom e = ".com" `isSuffixOf` e
 ```
 
 Впрочем, указывать тип столь простых функций, как правило, необязательно.
@@ -222,16 +222,16 @@ endsWithCom e = ".com" `isSuffixOf` e
 ```haskell
 проверкаАдресаЭлПочты :: String -> Bool
 проверкаАдресаЭлПочты элПочта =
-    containsAtSign элПочта && endsWithCom элПочта
+    содержитАТсимвол элПочта && оканчиваетсяНаCom элПочта
   where
-    containsAtSign = \e -> "@" `isInfixOf` e
-    endsWithCom = \e -> ".com" `isSuffixOf` e
+    содержитАТсимвол = \e -> "@" `isInfixOf` e
+    оканчиваетсяНаCom = \e -> ".com" `isSuffixOf` e
 ```
 
 Теперь выражения `containsAtSign` и `endsWithCom` приравнены к ЛФ от одного аргумента. В этом случае мы не указываем тип этих выражений. Впрочем, если очень хочется, можно и указать:
 
 ```haskell
-containsAtSign =
+содержитАТсимвол =
     (\e -> "@" `isInfixOf` e) :: String -> Bool
 
     лямбда-абстракция            тип этой абстракции
@@ -240,7 +240,7 @@ containsAtSign =
 Лямбда-абстракция взята в скобки, чтобы указание типа относилось к функции в целом, а не только к аргументу `e`:
 
 ```haskell
-containsAtSign =
+содержитАТсимвол =
     \e -> "@" `isInfixOf` e :: String -> Bool
 
                                в этом случае это
@@ -257,10 +257,10 @@ type Func = String -> Bool
 
 проверкаАдресаЭлПочты :: String -> Bool
 проверкаАдресаЭлПочты элПочта =
-    containsAtSign элПочта && endsWithCom элПочта
+    содержитАТсимвол элПочта && оканчиваетсяНаCom элПочта
   where
-    containsAtSign = (\e -> "@" `isInfixOf` e) :: Func
-    endsWithCom = (\e -> ".com" `isSuffixOf` e) :: Func
+    содержитАТсимвол = (\e -> "@" `isInfixOf` e) :: Func
+    оканчиваетсяНаCom = (\e -> ".com" `isSuffixOf` e) :: Func
 ```
 
 Впрочем, на практике указание типа для лямбда-абстракций встречается исключительно редко, ибо незачем.
