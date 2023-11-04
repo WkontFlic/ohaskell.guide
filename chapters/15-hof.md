@@ -319,7 +319,7 @@ main = print . (map (\n -> n * 10)) $ [1.2, 1,4, 1.6]
 import Data.Char
 
 pretty :: [String] -> [String]
-pretty = map (stars . big)  -- передаёь map композицию функций `stars . big`
+pretty = map (stars . big)  -- передаёт функции "map" композицию из функций "stars . big"
   where
     big = map toUpper                 -- определение функции big - преобразует строку в верхний регистр
     stars = \s -> "* " ++ s ++ " *"   -- определение лямбда-функции stars - обрамляет строку звёздочками - ** строка **
