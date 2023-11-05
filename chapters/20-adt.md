@@ -5,16 +5,20 @@
 Оставим сетевые протоколы и дни недели, рассмотрим такой пример:
 
 ```haskell
-data IPAddress = IPAddress String
+data IPAddress = IPAddress String   -- конструктор IPAddress для типа IPAddress имеет поле типа String
 ```
 
-Тип `IPAddress` использует один-единственный конструктор значения, но кое-что изменилось. Во-первых, имена типа и конструктора совпадают. Это вполне легально, вы встретите такое не раз. Во-вторых, конструктор уже не нульарный, а унарный (англ. unary), потому что теперь он связан с одним значением типа `String`. И вот как создаются значения типа `IPAddress`:
+Тип `IPAddress` использует один-единственный конструктор значения, но кое-что изменилось.
+- имена типа (IPAddress) и конструктора (IPAddress) совпадают. Это вполне допустимо и Вы встретите такое не раз.
+- конструктор уже не нульарный, а унарный (англ. unary), потому что теперь он связан с одним значением типа `String`. (напомню: Арность функции – это количество аргументов, которые принимает функция).
+
+И вот как создаются значения типа `IPAddress`:
 
 ```haskell
   let ip = IPAddress "127.0.0.1"
 ```
 
-Значение `ip` типа `IPAddress` образовано конструктором и конкретным значением некоего типа:
+Значение `ip` типа `IPAddress` образовано конструктором и конкретным значением типа String:
 
 ```haskell
   let ip = IPAddress       "127.0.0.1"
@@ -37,7 +41,7 @@ data IPAddress = IPAddress    String
 Расширим тип `IPAddress`, сделав его более современным:
 
 ```haskell
-data IPAddress = IPv4 String | IPv6 String
+data IPAddress = IPv4 String | IPv6 String  --  два конструктора IPv4 и IPv6 с полем типа String
 ```
 
 Теперь у нас два конструктора, соответствующих разным IP-версиям. Это позволит нам создавать значение типа `IPAddress` так:
@@ -55,8 +59,8 @@ data IPAddress = IPv4 String | IPv6 String
 Сделаем тип ещё более удобным. Так, при работе с IP-адресом нам часто требуется `localhost`. И чтобы явно не писать `"127.0.0.1"` и `"0:0:0:0:0:0:0:1"`, введём ещё два конструктора:
 
 ```haskell
-data IPAddress = IPv4 String
-               | IPv4Localhost
+data IPAddress = IPv4 String       -- конструктор IPv4 с полем типа String  
+               | IPv4Localhost     -- конструктор IPv4 без поля
                | IPv6 String
                | IPv6Localhost
 ```
@@ -75,11 +79,11 @@ data IPAddress = IPv4 String
   let google = IPv4 "173.194.122.194"
 ```
 
-Как же нам потом извлечь конкретное строковое значение из `google`? С помощью нашего старого друга, паттерн матчинга:
+Как же нам потом извлечь конкретное строковое значение из `google`? С помощью нашего старого друга, сопоставления с образцом (паттерн матчинга):
 
 ```haskell
 checkIP :: IPAddress -> String
-checkIP (IPv4 address) = "IP is '" ++ address ++ "'."
+checkIP (IPv4 address) = "IP = '" ++ address ++ "'."
 
 main :: IO ()
 main = putStrLn . checkIP $ IPv4 "173.194.122.194"
@@ -88,13 +92,13 @@ main = putStrLn . checkIP $ IPv4 "173.194.122.194"
 Результат:
 
 ```bash
-IP is '173.194.122.194'.
+IP = '173.194.122.194'.
 ```
 
 Взглянем на определение:
 
 ```haskell
-checkIP (IPv4 address) = "IP is '" ++ address ++ "'."
+checkIP (IPv4 address) = "IP = '" ++ address ++ "'."
 ```
 
 Здесь мы говорим: &laquo;Мы знаем, что значение типа `IPAddress` сформировано с конструктором и строкой&raquo;. Однако внимательный компилятор сделает нам замечание:
@@ -111,10 +115,10 @@ In an equation for ‘checkIP’:
 В самом деле, откуда мы знаем, что значение, к которому применили функцию `checkIP`, было сформировано именно с помощью конструктора `IPv4`? У нас же есть ещё три конструктора, и нам следует проверить их все:
 
 ```haskell
-checkIP :: IPAddress -> String
-checkIP (IPv4 address) = "IPv4 is '" ++ address ++ "'."
+checkIP :: IPAddress -> String    -- определение функции chekIP принимаюей значение типа IPAddress и возвращающая строку
+checkIP (IPv4 address) = "IPv4 = '" ++ address ++ "'."
 checkIP IPv4Localhost  = "IPv4, localhost."
-checkIP (IPv6 address) = "IPv6 is '" ++ address ++ "'."
+checkIP (IPv6 address) = "IPv6 = '" ++ address ++ "'."
 checkIP IPv6Localhost  = "IPv6, localhost."
 ```
 
@@ -134,22 +138,24 @@ checkIP addr = case addr of
 Определим тип для сетевой точки:
 
 ```haskell
+-- конструктор EndPoint для типа EndPoint с полями типа String и Int
 data EndPoint = EndPoint String Int
 ```
 
 Конструктор `EndPoint` &mdash; бинарный, ведь здесь уже два значения. Создаём обычным образом:
 
 ```haskell
+  -- применяется конструктор для типа EndPoint с полями "173.194.122.194" 80
   let googlePoint = EndPoint "173.194.122.194" 80
 ```
 
-Конкретные значения извлекаем опять-таки через паттерн матчинг:
+Конкретные значения извлекаем опять-таки через сопоставление с образцом:
 
 ```haskell
 main :: IO ()
-main = putStrLn $ "The host is: " ++ host
+main = putStrLn $ "The host is: " ++ хост
   where
-    EndPoint host _ = EndPoint "173.194.122.194" 80
+    EndPoint хост _ = EndPoint "173.194.122.194" 80   -- извлекается только значение "хост" т.е. "173.194.122.194"
 
     └── образец ──┘   └──────── значение ─────────┘
 ```
@@ -159,6 +165,7 @@ main = putStrLn $ "The host is: " ++ host
 И всё бы хорошо, но тип `EndPoint` мне не очень нравится. Есть в нём что-то некрасивое. Первым полем выступает строка, содержащая IP-адрес, но зачем нам строка? У нас же есть прекрасный тип `IPAddress`, он куда лучше безликой строки. Это общее правило для Haskell-разработчика: чем больше информации несёт в себе тип, тем он лучше. Давайте заменим определение:
 
 ```haskell
+-- конструктор EndPoint для типа EndPoint с полями типа IPAddress и Int
 data EndPoint = EndPoint IPAddress Int
 ```
 
